@@ -4,4 +4,5 @@ addons:
     packages:
       - docker-ce
 script:
+  - make build
   - make tests
