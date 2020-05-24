@@ -3,6 +3,7 @@ addons:
   apt:
     packages:
       - docker-ce
-script:
+install:
   - make build
+script:
   - make tests
