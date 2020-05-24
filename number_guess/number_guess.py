@@ -2,6 +2,10 @@ import random
 import time
 
 
+class InvalidInput(Exception):
+    pass
+
+
 def intro():
     print('Welcome to the Number Guessing Game!')
     print('Think of a number between 1-10')
@@ -42,6 +46,8 @@ def handle_response(resp, current_guess, current_lower, current_upper):
         # We need to shift our guesses higher
         new_lower = current_guess + 1
         new_upper = current_upper
+    else:
+        raise InvalidInput(f"Valid responses are 'L' or 'H'. Got '{resp}'")
     return new_lower, new_upper
 
 
