@@ -10,6 +10,8 @@ ACCEPTABLE_RESPONSES = (LOWER,
                         HIGHER,
                         SPOT_ON)
 
+INTRO_SLEEP_LENGTH = 10
+
 
 class InvalidInput(Exception):
     pass
@@ -22,7 +24,7 @@ class NoValidGuessesRemaining(Exception):
 def intro():
     print('Welcome to the Number Guessing Game!')
     print('Think of a number between 1-10')
-    time.sleep(2)
+    time.sleep(INTRO_SLEEP_LENGTH)
 
 
 def main():
