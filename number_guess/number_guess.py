@@ -22,7 +22,7 @@ class NoValidGuessesRemaining(Exception):
 def intro():
     print('Welcome to the Number Guessing Game!')
     print('Think of a number between 1-10')
-    time.sleep(2)
+    time.sleep(5)
 
 
 def main():
