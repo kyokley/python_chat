@@ -2,6 +2,8 @@ def get_list(number):
     result = []
 
     for i in range(2, number + 1):  # 0, 1, 2, 3, ..., number
+        if number < 2:
+            raise Exception('passing an integer less than two doesnt work.')
         result.append(i)
 
     return result
