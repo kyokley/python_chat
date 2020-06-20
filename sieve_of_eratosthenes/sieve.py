@@ -1,10 +1,10 @@
 def get_list(number):
-
+    
     if not isinstance(number, int):
-        raise Exception('try something else')
-
+        raise Exception('try something else') 
+    
     result = []
-
+    
 
     if number < 2:
             raise Exception('passing an integer less than two doesnt work.')
@@ -27,7 +27,7 @@ def get_list(number):
 
 
 def remove_multiples(sequence, number):
-
+   
     result = []
 
 
@@ -48,14 +48,14 @@ def remove_multiples(sequence, number):
 
 
 
-    return element
+    return result  
 
 
 
 
 
 def prime_list(number):
-
+    
     long_list = get_list(number)
 
 
@@ -65,7 +65,7 @@ def prime_list(number):
     while idx < len(long_list):
 
         multiple_check = long_list[idx]
-
+        
         long_list = remove_multiples(long_list, multiple_check)
 
         idx = idx + 1
