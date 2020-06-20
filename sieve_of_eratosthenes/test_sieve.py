@@ -19,6 +19,14 @@ def test_primes_list_105():
     assert expected == actual
 
 
-def test_invalid_input():
+def test_negative_number_is_invalid_input():
     with pytest.raises(Exception):
         prime_list(-10)
+
+
+def test_non_int_is_invalid_input():
+    with pytest.raises(Exception):
+        prime_list('w')
+
+    with pytest.raises(Exception):
+        prime_list(2.5)
