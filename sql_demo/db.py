@@ -19,28 +19,6 @@ class Database:
         self.db_path = DATABASE_PATH
         self._connection = None
         self._cursor = None
-        self._max_id = self._set_max_id()
-
-    def _set_max_id(self):
-        try:
-            query = '''select max(pk) from student'''
-            self.cursor.execute(query)
-            max_val = self.cursor.fetchone()[0] or 0
-        except sqlite3.OperationalError:
-            max_val = 0
-
-        try:
-            query = '''select max(pk) from score'''
-            self.cursor.execute(query)
-            max_val = max(max_val, self.cursor.fetchone()[0] or 0)
-        except sqlite3.OperationalError:
-            pass
-
-        return max_val + 1
-
-    def get_id(self):
-        self._max_id += 1
-        return self._max_id
 
     @property
     def connection(self):
@@ -151,6 +129,7 @@ class Table:
     TABLE_NAME = None
     _initialized = False
     _db = Database()
+    _max_id = None
 
     @classmethod
     def primary_key_column(cls):
@@ -186,7 +165,7 @@ class Table:
     def save(self):
         exists_query = f'''
             SELECT 1 FROM {self.TABLE_NAME}
-            WHERE pk = {self.pk}
+            WHERE id = {self.id}
         '''
         self._db.execute(exists_query)
         exists = self._db.fetchone()
@@ -237,6 +216,34 @@ class Table:
             if col.col_type == ColumnType.FOREIGN_KEY:
                 obj_or_val = col.klass.get(obj_or_val)
             setattr(self, col.name, obj_or_val)
+
+    @classmethod
+    def count(cls):
+        count_query = f'''
+            SELECT COUNT(*) FROM {cls.TABLE_NAME}
+        '''
+        cls._db.execute(count_query)
+        row = cls._db.fetchone()
+        return row[0]
+
+    @classmethod
+    def _set_max_id(cls):
+        try:
+            query = f'''SELECT MAX({cls.primary_key_column().name}) FROM {cls.TABLE_NAME}'''
+            cls._db.cursor.execute(query)
+            max_val = cls._db.cursor.fetchone()[0] or 0
+        except sqlite3.OperationalError:
+            max_val = 0
+
+        return max_val + 1
+
+    @classmethod
+    def get_next_id(cls):
+        if cls._max_id is None:
+            cls._max_id = cls._set_max_id()
+
+        cls._max_id += 1
+        return cls._max_id
 
     def __repr__(self):
         return str(self)

@@ -7,7 +7,7 @@ from db import (Table,
 class Student(Table):
     TABLE_NAME = 'student'
 
-    pk = IntegerColumn('pk', primary_key=True)
+    id = IntegerColumn('id', primary_key=True)
     first_name = TextColumn('first_name')
     last_name = TextColumn('last_name')
     grade = IntegerColumn('grade')
@@ -16,19 +16,19 @@ class Student(Table):
     def scores(self):
         from score import Score
         self._db.execute('''
-            SELECT pk, student_id, score, subject FROM score
+            SELECT id, student_id, score, subject FROM score
             WHERE student_id = ?
-        ''', (self.pk,))
+        ''', (self.id,))
         rows = self._db.fetchall()
         return [Score(self,
                       row[2],
                       row[3],
-                      pk=row[0],
+                      id=row[0],
                       save=False)
                 for row in rows]
 
-    def __init__(self, first_name, last_name, grade, pk=None, save=True):
-        self.pk = pk or self._db.get_id()
+    def __init__(self, first_name, last_name, grade, id=None, save=True):
+        self.id = id or self.get_next_id()
         self.first_name = first_name
         self.last_name = last_name
         self.grade = grade
@@ -37,29 +37,29 @@ class Student(Table):
             self.save()
 
     def __str__(self):
-        return f'<{self.__class__.__name__}: pk={self.pk} {self.first_name} {self.last_name} {self.grade}>'
+        return f'<{self.__class__.__name__}: id={self.id} {self.first_name} {self.last_name} {self.grade}>'
 
     @classmethod
-    def get(cls, pk):
+    def get(cls, id):
         cls._db.execute('''
-            SELECT pk, first_name, last_name, grade from student where pk = ?
-        ''', (pk,))
+            SELECT id, first_name, last_name, grade from student where id = ?
+        ''', (id,))
         row = cls._db.fetchone()
         return cls(row[1],
                    row[2],
                    row[3],
-                   pk=row[0],
+                   id=row[0],
                    save=False)
 
     @classmethod
     def all(cls):
         cls._db.execute('''
-            SELECT pk, first_name, last_name, grade from student
+            SELECT id, first_name, last_name, grade from student
         ''')
         rows = cls._db.fetchall()
         return [cls(row[1],
                     row[2],
                     row[3],
-                    pk=row[0],
+                    id=row[0],
                     save=False)
                 for row in rows]

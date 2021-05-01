@@ -16,13 +16,13 @@ class Subject(StrEnum):
 
 class Score(Table):
     TABLE_NAME = 'score'
-    pk = IntegerColumn('pk', primary_key=True)
+    id = IntegerColumn('id', primary_key=True)
     student = ForeignKey(Student)
     score = IntegerColumn('score')
     subject = TextColumn('subject')
 
-    def __init__(self, student, score, subject, pk=None, save=True):
-        self.pk = pk or self._db.get_id()
+    def __init__(self, student, score, subject, id=None, save=True):
+        self.id = id or self.get_next_id()
         self.student = student
         self.score = score
         self.subject = subject
@@ -39,4 +39,4 @@ class Score(Table):
         self._subject = val
 
     def __str__(self):
-        return f'<{self.__class__.__name__}: pk={self.pk} {self.student.first_name} {self.student.last_name} {self.score} {self.subject}>'
+        return f'<{self.__class__.__name__}: id={self.id} {self.student.first_name} {self.student.last_name} {self.score} {self.subject}>'
